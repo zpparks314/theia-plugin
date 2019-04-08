@@ -6,3 +6,5 @@ run echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources
 run apt-get update -y && apt-get install -y yarn \
     && git clone --recursive https://github.com/theia-ide/theia.git \
     && cd theia && yarn && cd ../
+run cd /home/ && git clone --recursive https://github.com/zpparks314/theia-plugin.git \
+    && cd theia-plugin/my-ide/ && yarn && yarn theia build && cd ../
