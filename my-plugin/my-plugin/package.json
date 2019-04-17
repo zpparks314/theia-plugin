@@ -10,6 +10,17 @@
       "files": [
         "src"
       ],
+      "contributes": {
+	      "viewsContainers": {
+	              "activitybar": [
+		              {
+			             "id": "QPUs",
+			             "title": "Available Quantum Accelerators",
+			             "icon": "resources/quantum.svg"
+		              }
+	              ]
+              }
+      },
       "devDependencies": {
         "@theia/plugin": "next",
         "@theia/plugin-packager": "latest",
