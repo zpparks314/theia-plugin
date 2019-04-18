@@ -6,20 +6,28 @@
       ],
       "version": "0.0.1",
       "license": "none",
-      
+
       "files": [
         "src"
       ],
       "contributes": {
-	      "viewsContainers": {
-	              "activitybar": [
-		              {
-			             "id": "QPUs",
-			             "title": "Available Quantum Accelerators",
-			             "icon": "resources/quantum.svg"
-		              }
-	              ]
-              }
+	    "viewsContainers": {
+	        "activitybar": [
+		        {
+			        "id": "QC",
+			        "title": "Quantum Computing",
+			        "icon": "resources/quantum.svg"
+		        }
+	        ]
+        },
+        "views": {
+            "QC": [
+                {
+                    "id": "QPUs",
+                    "name": "Available Quantum Accelerators"
+                }
+            ]
+        }
       },
       "devDependencies": {
         "@theia/plugin": "next",
@@ -33,16 +41,13 @@
         "clean": "rimraf lib",
         "format-code": "tsfmt -r",
         "watch": "tsc -watch",
-        "compile": "tsc", 
+        "compile": "tsc",
         "build": "yarn run format-code && yarn run compile && theia-plugin pack"
       },
       "engines": {
         "theiaPlugin": "next"
       },
       "theiaPlugin": {
-          
-          
             "backend": "lib/my-plugin-backend.js"
-          
       }
 }
