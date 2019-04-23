@@ -1,53 +1,69 @@
 {
-      "name": "my-plugin",
-      "publisher": "theia",
-      "keywords": [
-        "theia-plugin"
-      ],
-      "version": "0.0.1",
-      "license": "none",
-
-      "files": [
-        "src"
-      ],
-      "contributes": {
-	    "viewsContainers": {
-	        "activitybar": [
-		        {
-			        "id": "QC",
-			        "title": "Quantum Computing",
-			        "icon": "resources/quantum.svg"
-		        }
-	        ]
-        },
-        "views": {
-            "QC": [
-                {
-                    "id": "QPUs",
-                    "name": "Available Quantum Accelerators"
-                }
-            ]
+  "name": "my-plugin",
+  "publisher": "theia",
+  "keywords": [
+    "theia-plugin"
+  ],
+  "version": "0.0.1",
+  "license": "none",
+  "files": [
+    "src"
+  ],
+  "activationEvents": [
+    "onView:QC"
+  ],
+  "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "QC",
+          "title": "Quantum Computing",
+          "icon": "resources/quantum.svg"
         }
-      },
-      "devDependencies": {
-        "@theia/plugin": "next",
-        "@theia/plugin-packager": "latest",
-        "rimraf": "2.6.2",
-        "typescript-formatter": "7.2.2",
-        "typescript": "2.9.2"
-      },
-      "scripts": {
-        "prepare": "yarn run clean && yarn run build",
-        "clean": "rimraf lib",
-        "format-code": "tsfmt -r",
-        "watch": "tsc -watch",
-        "compile": "tsc",
-        "build": "yarn run format-code && yarn run compile && theia-plugin pack"
-      },
-      "engines": {
-        "theiaPlugin": "next"
-      },
-      "theiaPlugin": {
-            "backend": "lib/my-plugin-backend.js"
-      }
+      ]
+    },
+    "views": {
+      "QC": [
+        {
+          "id": "QPUs",
+          "name": "Available Quantum Accelerators"
+        }
+      ]
+    },
+    "menus": {
+      "view/item/context": [
+        {
+          "command": "QPUVendorExplorer.showConnectivity",
+          "when": "view == QPUs && viewItem == backend",
+          "group": "inline"
+        },
+        {
+          "command": "QPUVendorExplorer.openConfigFile",
+          "when": "view == QPUs && viewItem == vendor",
+          "group": "inline"
+        }
+      ]
+    }
+  },
+  "devDependencies": {
+    "@theia/plugin": "next",
+    "@theia/plugin-packager": "latest",
+    "rimraf": "2.6.2",
+    "typescript-formatter": "7.2.2",
+    "typescript": "2.9.2"
+  },
+  "scripts": {
+    "prepare": "yarn run clean && yarn run build",
+    "clean": "rimraf lib",
+    "format-code": "tsfmt -r",
+    "watch": "tsc -watch",
+    "compile": "tsc",
+    "build": "yarn run format-code && yarn run compile && theia-plugin pack"
+  },
+  "engines": {
+    "theiaPlugin": "next"
+  },
+  "theiaPlugin": {
+    "backend": "lib/my-plugin-backend.js"
+  }
 }
