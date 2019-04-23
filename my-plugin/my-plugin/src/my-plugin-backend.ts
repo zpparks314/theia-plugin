@@ -4,11 +4,11 @@
  */
 
 import * as theia from '@theia/plugin';
-import { QPUTree } from './qpuTreeView'
+import { QPUVendorExplorer } from './qpuVendorExplorer'
 
 export function start(context: theia.PluginContext) {
 
-    new QPUTree(context);
+    new QPUVendorExplorer(context);
 
     console.log(theia.window.state);
 }
