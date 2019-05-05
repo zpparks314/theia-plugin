@@ -1,16 +1,13 @@
 import * as theia from '@theia/plugin';
+import { PythonShell } from 'python-shell';
 
 const vendors: Map<string, string[]> = new Map<string, string[]>();
-vendors.set('IBM', ['ibmq_20_tokyo', 'ibmq_poughkeepsie']);
-vendors.set('D-Wave', ['DW_2000Q_2_1', 'DW_2000Q_VFYC_2_1']);
-vendors.set("test_with_no_children", [""])
-const test: Map<string, string[]> = new Map<string, string[]>();
-test.set("testing", ['hey', 'hi']);
 
 const ON_DID_SELECT_VENDOR = 'QPUVendorExplorer.onDidSelectVendor';
 const ON_DID_SELECT_BACKEND = 'QPUVendorExporer.onDidSelectBackend';
 const SELECT_BACKEND_CONNECTIVITY = 'QPUVendorExplorer.showConnectivity';
 const OPEN_CONFIG_FILE = 'QPUVendorExplorer.openConfigFile';
+const GET_AVAILABLE_ACCELERATORS = 'QPUVendorExplorer.refreshAvailableAccerators';
 
 export class QPUVendorExplorer {
 
@@ -21,8 +18,10 @@ export class QPUVendorExplorer {
     selectedBackend: string | undefined;
 
     constructor(context: theia.PluginContext) {
-        this.treeDataProvider = new QPUTreeDataProvider();
 
+
+        this.treeDataProvider = new QPUTreeDataProvider();
+        this.getAvailableAccelerators(this.treeDataProvider);
         this.tree = theia.window.createTreeView('QPUs', { treeDataProvider: this.treeDataProvider });
 
         this.tree.onDidExpandElement(event => {
@@ -38,6 +37,12 @@ export class QPUVendorExplorer {
                 id: SELECT_BACKEND_CONNECTIVITY,
                 label: "Show QPU Connectivity"
             }, args => this.showConnectivity(args)));
+
+        context.subscriptions.push(
+            theia.commands.registerCommand({
+                id: GET_AVAILABLE_ACCELERATORS,
+                label: "Refresh Available Accelerators"
+            }, args => this.getAvailableAccelerators(this.treeDataProvider)));
 
         context.subscriptions.push(
             theia.commands.registerCommand({
@@ -70,6 +75,22 @@ export class QPUVendorExplorer {
         if (args && args.length > 0) {
             console.log("Open Config file for:" + args[0].toString());
         }
+    }
+
+    getAvailableAccelerators(dataProvider: QPUTreeDataProvider) {
+        PythonShell.run('get_qpu_info.py', { mode: 'json', pythonPath: 'python3', scriptPath: 'python/' }, function(err: any, results: any[] | undefined) {
+            if (err) throw err;
+            vendors.clear();
+            let length = results!.length;
+            console.log("results from python script: %j", results);
+            console.log("length of results array: %j", length);
+            for (let vendor of results!) {
+                console.log(vendor.vendorName);
+                console.log(vendor.backends);
+                vendors.set(vendor.vendorName, vendor.backends);
+            }
+            dataProvider.sendDataChanged();
+        });
     }
 
     onDidSelectVendor(...args: any[]) {
